@@ -19,6 +19,17 @@
         >
           <icon-external-link />
         </default-button>
+        <default-button
+          size="xs"
+          class="cursor-pointer hover:opacity-75"
+          @click="downloadXLSX()"
+          v-show="isExportable"
+          :disabled="exportLoading"
+          :title="exportLoading ? 'Exporting...' : 'Download XLSX'"
+        >
+          <icon-download v-if="!exportLoading" />
+          <span v-else>...</span>
+        </default-button>
         <select-control
           size="xxs"
           @change="handleFilterChanged"
@@ -44,13 +55,17 @@
 import LineChart from '../bar-chart';
 import IconRefresh from './Icons/IconRefresh';
 import IconExternalLink from './Icons/IconExternalLink';
+import IconDownload from './Icons/IconDownload';
+import HandlesChartExport from '../mixins/HandlesChartExport';
 
 export default {
   components: {
     IconExternalLink,
     IconRefresh,
+    IconDownload,
     LineChart,
   },
+  mixins: [HandlesChartExport],
   data() {
     this.card.options = this.card.options != undefined ? this.card.options : false;
 
@@ -107,6 +122,8 @@ export default {
               { text: '60 Days', value: 60 },
               { text: '365 Days', value: 365 },
             ],
+      exportLoading: false,
+      isExportable: this.card.exportable !== false,
     };
   },
   computed: {

@@ -2,9 +2,7 @@
 
 namespace Coroowicaksono\ChartJsIntegration;
 
-use Laravel\Nova\Card;
-
-class LineChart extends Card
+class LineChart extends ExportableCard
 {
     /**
      * The width of the card (1/3, 1/2, or full).

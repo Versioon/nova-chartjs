@@ -2,10 +2,9 @@
 
 namespace Coroowicaksono\ChartJsIntegration;
 
-use Laravel\Nova\Card;
 use Illuminate\Support\Str;
 
-class StackedChart extends Card
+class StackedChart extends ExportableCard
 {
     /**
      * The width of the card (1/3, 1/2, or full).
