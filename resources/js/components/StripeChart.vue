@@ -123,7 +123,7 @@ export default {
               { text: '365 Days', value: 365 },
             ],
       exportLoading: false,
-      isExportable: this.card.exportable !== false,
+      isExportable: this.card.exportable === true,
     };
   },
   computed: {
