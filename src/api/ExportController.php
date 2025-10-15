@@ -21,13 +21,14 @@ class ExportController extends Controller
         $series = $request->input('series', []);
         $labels = $request->input('labels', []);
         $title = $request->input('title', 'chart-export');
+        $sanitizedTitle = str($title)->limit(20, '')->replaceMatches('/[^A-Za-z0-9\s]/', '')->replaceMatches('/\s+/', '_')->value();
 
         // Create new Spreadsheet
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
         // Set title
-        $sheet->setTitle(substr($title, 0, 31)); // Excel sheet title max 31 chars
+        $sheet->setTitle($sanitizedTitle); // Excel sheet title max 31 chars
 
         // Add header row with labels
         $sheet->setCellValue('A1', 'Label');
@@ -69,8 +70,6 @@ class ExportController extends Controller
 
         // Generate filename with timestamp
         $timestamp = date('Y-m-d_H-i-s');
-        $sanitizedTitle = preg_replace('/[^a-zA-Z0-9\-_ ]/', '', $title);
-        $sanitizedTitle = str_replace(' ', '_', $sanitizedTitle);
         $filename = "{$sanitizedTitle}_{$timestamp}.xlsx";
 
         // Create streamed response
