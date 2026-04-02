@@ -30,7 +30,7 @@ export default {
       this.exportLoading = true;
 
       const params = {
-        series: this.card.series,
+        series: this.datacollection?.datasets || this.card.series || [],
         labels: this.datacollection.labels || this.card.options?.xaxis?.categories || [],
         title: this.card.title || 'chart-export',
       };
