@@ -3,22 +3,6 @@
     <div class="h-6 mb-4 flex items-center">
       <h4 class="mr-3 leading-tight text-sm font-bold">{{ card.title || 'Chart JS Integration' }}</h4>
       <div class="flex relative ml-auto flex-shrink-0">
-        <default-button size="xs" class="mr-2" @click="fetch()" v-show="card.options && card.options.btnRefresh">
-          <icon-refresh />
-        </default-button>
-        <default-button size="xs" class="mr-2" @click="reloadPage()" v-show="card.options && card.options.btnReload">
-          <icon-refresh />
-        </default-button>
-        <default-button
-          size="xs"
-          class="mr-2"
-          component="a"
-          :href="card.options && card.options.extLink"
-          :target="card.options && card.options.extLinkIn ? card.options.extLinkIn : '_self'"
-          v-show="card.options && card.options.extLink"
-        >
-          <icon-external-link />
-        </default-button>
         <SelectControl
           v-if="card.ranges && card.ranges.length > 0"
           :value="selectedRangeKey"
@@ -108,9 +92,9 @@ export default {
     },
 
     buildOptions() {
-      const opts    = this.card.options || {};
+      const opts = this.card.options || {};
       const plugins = opts.plugins || {};
-      const legend  = opts.legend || {
+      const legend = opts.legend || {
         display: true,
         position: 'right',
         labels: { fontColor: '#7c858e', fontFamily: "'Nunito'" },
@@ -138,9 +122,19 @@ export default {
       }
       if (tooltips.callbacks) {
         const cbFields = [
-          'beforeTitle','title','afterTitle','beforeBody','beforeLabel','label',
-          'labelColor','labelTextColor','afterLabel','afterBody','beforeFooter',
-          'footer','afterFooter',
+          'beforeTitle',
+          'title',
+          'afterTitle',
+          'beforeBody',
+          'beforeLabel',
+          'label',
+          'labelColor',
+          'labelTextColor',
+          'afterLabel',
+          'afterBody',
+          'beforeFooter',
+          'footer',
+          'afterFooter',
         ];
         for (const cb of cbFields) {
           if (tooltips.callbacks[cb]?.includes?.('function')) {
@@ -153,13 +147,12 @@ export default {
     setupPercentageTooltip(datasets) {
       if (!this.card.options?.showPercentage) return;
       const dataArr = datasets[0]?.data ?? [];
-      const sum     = dataArr.reduce((a, b) => parseInt(a) + parseInt(b), 0);
+      const sum = dataArr.reduce((a, b) => parseInt(a) + parseInt(b), 0);
       this.chartOptions.plugins = this.chartOptions.plugins || {};
       this.chartOptions.plugins.tooltip = {
         callbacks: {
           ...(this.chartOptions.plugins?.tooltip?.callbacks || {}),
-          label: (context) =>
-            context.label + ': ' + context.raw + ' (' + ((context.raw * 100) / sum).toFixed(2) + '%)',
+          label: (context) => context.label + ': ' + context.raw + ' (' + ((context.raw * 100) / sum).toFixed(2) + '%)',
         },
       };
     },
@@ -170,24 +163,34 @@ export default {
 
       this.chartOptions.onClick = function (_event, element) {
         if (element.length > 0) {
-          const label      = element[0].label;
-          const value      = this.data.datasets[element[0].datasetIndex].data[element[0].index];
-          const dataArr    = datasets[0]?.data ?? [];
-          const sum        = dataArr.reduce((a, b) => parseInt(a) + parseInt(b), 0);
+          const label = element[0].label;
+          const value = this.data.datasets[element[0].datasetIndex].data[element[0].index];
+          const dataArr = datasets[0]?.data ?? [];
+          const sum = dataArr.reduce((a, b) => parseInt(a) + parseInt(b), 0);
           const percentage = (value / sum) * 100;
-          const toLink     = sweetAlertWithLink.linkTo ?? 'https://coroo.github.io/nova-chartjs/';
+          const toLink = sweetAlertWithLink.linkTo ?? 'https://coroo.github.io/nova-chartjs/';
           const { linkTo, ...sweetAlert } = sweetAlertWithLink;
           const Swal = require('sweetalert2');
           Swal.fire({
             title: sweetAlert.title ?? '<strong>' + label + '</strong>',
             icon: sweetAlert.icon ?? 'info',
-            html: sweetAlert.html ?? ('Percentage: <b>' + percentage.toFixed(2) + '%</b><br/><b>' + value + '</b> data from <b>' + sum + '</b><br/>'),
+            html:
+              sweetAlert.html ??
+              'Percentage: <b>' +
+                percentage.toFixed(2) +
+                '%</b><br/><b>' +
+                value +
+                '</b> data from <b>' +
+                sum +
+                '</b><br/>',
             showCloseButton: sweetAlert.showCloseButton ?? true,
             showCancelButton: sweetAlert.showCancelButton ?? true,
             focusConfirm: sweetAlert.focusConfirm ?? false,
             confirmButtonText: sweetAlert.confirmButtonText ?? '<i class="fas fa-external-link-alt"></i> See Detail',
             ...sweetAlert,
-          }).then((result) => { if (result.value) window.location = toLink; });
+          }).then((result) => {
+            if (result.value) window.location = toLink;
+          });
         }
       };
     },

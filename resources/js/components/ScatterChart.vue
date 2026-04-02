@@ -3,22 +3,6 @@
     <div class="h-6 mb-4 flex items-center pb-0">
       <h4 class="mr-3 leading-tight text-sm font-bold">{{ card.title || 'Chart JS Integration' }}</h4>
       <div class="flex relative ml-auto flex-shrink-0">
-        <default-button size="xs" class="mr-2" @click="fetch()" v-show="card.options && card.options.btnRefresh">
-          <icon-refresh />
-        </default-button>
-        <default-button size="xs" class="mr-2" @click="reloadPage()" v-show="card.options && card.options.btnReload">
-          <icon-refresh />
-        </default-button>
-        <default-button
-          size="xs"
-          class="mr-2"
-          component="a"
-          :href="card.options && card.options.extLink"
-          :target="card.options && card.options.extLinkIn ? card.options.extLinkIn : '_self'"
-          v-show="card.options && card.options.extLink"
-        >
-          <icon-external-link />
-        </default-button>
         <SelectControl
           v-if="card.ranges && card.ranges.length > 0"
           :value="selectedRangeKey"
@@ -106,9 +90,9 @@ export default {
     },
 
     buildOptions() {
-      const opts    = this.card.options || {};
+      const opts = this.card.options || {};
       const plugins = opts.plugins || {};
-      const legend  = opts.legend || {
+      const legend = opts.legend || {
         display: true,
         position: 'left',
         labels: { fontColor: '#7c858e', fontFamily: "'Nunito'" },
