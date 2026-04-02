@@ -1,6 +1,6 @@
 <?php
 
-namespace Coroowicaksono\ChartJsIntegration;
+namespace Versioon\NovaChartJS;
 
 use Laravel\Nova\Card;
 
@@ -18,13 +18,12 @@ abstract class ExportableCard extends Card
 
     /**
      * Get the export filename.
-     *
-     * @return string
      */
     public function getExportFilename(): string
     {
         $title = $this->meta['title'] ?? 'chart-export';
         $timestamp = date('Y-m-d_H-i-s');
+
         return "{$title}_{$timestamp}.xlsx";
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | Card API Routes
@@ -13,6 +13,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/endpoint', \Coroowicaksono\ChartJsIntegration\Api\TotalRecordsController::class . '@handle');
-Route::get('/circle-endpoint', \Coroowicaksono\ChartJsIntegration\Api\TotalCircleController::class . '@handle');
-Route::post('/export', \Coroowicaksono\ChartJsIntegration\Api\ExportController::class . '@export');
+Route::get('/endpoint', \Versioon\NovaChartJS\Api\TotalRecordsController::class . '@handle');
+Route::get('/circle-endpoint', \Versioon\NovaChartJS\Api\TotalCircleController::class . '@handle');
+Route::post('/export', \Versioon\NovaChartJS\Api\ExportController::class . '@export');

@@ -1,36 +1,46 @@
 <template>
   <loading-card :loading="loading" class="min-h-40 px-6 py-4">
     <div class="h-6 mb-4 flex items-center pb-0">
-      <h4 class="mr-3 leading-tight text-sm font-bold">{{ checkTitle }}</h4>
+      <h4 class="mr-3 leading-tight text-sm font-bold">{{ card.title || 'Chart JS Integration' }}</h4>
       <div class="flex relative ml-auto flex-shrink-0">
-        <default-button size="xs" class="mr-2" @click="fillData()" v-show="buttonRefresh">
+        <default-button size="xs" class="mr-2" @click="fetch()" v-show="card.options && card.options.btnRefresh">
           <icon-refresh />
         </default-button>
-        <default-button size="xs" class="mr-2" @click="reloadPage()" v-show="buttonReload">
+        <default-button size="xs" class="mr-2" @click="reloadPage()" v-show="card.options && card.options.btnReload">
           <icon-refresh />
         </default-button>
         <default-button
           size="xs"
           class="mr-2"
           component="a"
-          :href="externalLink"
-          :target="externalLinkIn"
-          v-show="btnExtLink"
+          :href="card.options && card.options.extLink"
+          :target="card.options && card.options.extLinkIn ? card.options.extLinkIn : '_self'"
+          v-show="card.options && card.options.extLink"
         >
           <icon-external-link />
         </default-button>
+        <SelectControl
+          v-if="card.ranges && card.ranges.length > 0"
+          :value="selectedRangeKey"
+          @update:modelValue="handleRangeSelected"
+          :options="card.ranges"
+          size="xxs"
+          class="ml-2 w-[8rem] shrink-0"
+          :aria-label="__('Select Range')"
+        />
       </div>
     </div>
     <line-chart
       v-if="!loading"
       :chart-data="datacollection"
-      :options="options"
+      :options="chartOptions"
       :style="{ height: card.height && !['fixed', 'dynamic'].includes(card.height) ? card.height : 'auto' }"
     />
   </loading-card>
 </template>
 
 <script>
+import { MetricBehavior } from 'laravel-nova';
 import LineChart from '../scatter-chart.vue';
 import IconRefresh from './Icons/IconRefresh';
 import IconExternalLink from './Icons/IconExternalLink';
@@ -41,151 +51,92 @@ export default {
     IconRefresh,
     LineChart,
   },
-  data() {
-    this.card.options = this.card.options != undefined ? this.card.options : false;
-    return {
-      datacollection: {},
-      options: {},
-      loading: false,
-      buttonRefresh: this.card.options != undefined ? this.card.options.btnRefresh : false,
-      buttonReload: this.card.options.btnReload,
-      btnExtLink: this.card.options.extLink != undefined ? true : false,
-      externalLink: this.card.options.extLink,
-      externalLinkIn: this.card.options.extLinkIn != undefined ? this.card.options.extLinkIn : '_self',
-      chartTooltips: this.card.options.tooltips != undefined ? this.card.options.tooltips : undefined,
-      chartPlugins: this.card.options.plugins != undefined ? this.card.options.plugins : false,
-      chartLayout: this.card.options.layout != undefined ? this.card.options.layout : {},
-      chartLegend:
-        this.card.options.legend != undefined
-          ? this.card.options.legend
-          : {
-              display: true,
-              position: 'left',
-              labels: {
-                fontColor: '#7c858e',
-                fontFamily: "'Nunito'",
-              },
-            },
-    };
-  },
-  computed: {
-    checkTitle() {
-      return this.card.title !== undefined ? this.card.title : 'Chart JS Integration';
+
+  mixins: [MetricBehavior],
+
+  props: {
+    card: {
+      type: Object,
+      required: true,
     },
   },
-  props: ['card'],
-  mounted() {
-    this.fillData();
+
+  data() {
+    return {
+      datacollection: {},
+      chartOptions: {},
+      loading: true,
+      selectedRangeKey: null,
+    };
   },
+
+  created() {
+    if (this.card.ranges && this.card.ranges.length > 0) {
+      this.selectedRangeKey = this.card.selectedRangeKey || this.card.ranges[0].value;
+    }
+    this.buildOptions();
+    this.fetch();
+  },
+
+  computed: {
+    metricPayload() {
+      return { params: { range: this.selectedRangeKey } };
+    },
+  },
+
   methods: {
     reloadPage() {
       window.location.reload();
     },
-    fillData() {
-      this.options = {
-        ...this.card.options,
-        layout: this.chartLayout,
+
+    handleRangeSelected(key) {
+      this.selectedRangeKey = key;
+      this.fetch();
+    },
+
+    handleFetchCallback() {
+      return (response) => {
+        const data = response.data.value;
+        this.datacollection = {
+          labels: data.labels,
+          datasets: data.datasets,
+        };
+        this.loading = false;
+      };
+    },
+
+    buildOptions() {
+      const opts    = this.card.options || {};
+      const plugins = opts.plugins || {};
+      const legend  = opts.legend || {
+        display: true,
+        position: 'left',
+        labels: { fontColor: '#7c858e', fontFamily: "'Nunito'" },
+      };
+
+      this.chartOptions = {
+        ...opts,
+        layout: opts.layout || {},
         scales: {
-          ...(this.card.options.scales || {}),
+          ...(opts.scales || {}),
           xAxes: {
             type: 'linear',
             position: 'bottom',
             stacked: true,
-            ...(this.card.options.scales?.xAxes || {}),
+            ...(opts.scales?.xAxes || {}),
             ticks: {
-              ...(this.card.options.scales?.xAxes?.ticks || {}),
-              font: {
-                lineHeight: 0.8,
-                size: 10,
-                ...(this.card.options.scales?.xAxes?.ticks?.font || {}),
-              },
+              ...(opts.scales?.xAxes?.ticks || {}),
+              font: { lineHeight: 0.8, size: 10, ...(opts.scales?.xAxes?.ticks?.font || {}) },
             },
           },
         },
         responsive: true,
         maintainAspectRatio: false,
-        plugins: {
-          legend: this.chartLegend,
-          ...this.chartPlugins,
-        },
+        plugins: { legend, ...plugins },
       };
 
-      if (this.chartTooltips !== undefined) {
-        this.options.plugins.tooltip = this.chartTooltips;
-        const tooltiplist = ['custom', 'itemSort', 'filter'];
-        for (let z = 0; z < tooltiplist.length; z++) {
-          if (this.options.plugins.tooltip[tooltiplist[z]] != undefined) {
-            if (this.options.plugins.tooltip[tooltiplist[z]].search('function') != -1) {
-              eval(
-                'this.options.plugins.tooltip.' + tooltiplist[z] + ' = ' + this.options.plugins.tooltip[tooltiplist[z]]
-              );
-            }
-          }
-        }
-
-        if (this.chartTooltips.callbacks !== undefined) {
-          const callbacklist = [
-            'beforeTitle',
-            'title',
-            'afterTitle',
-            'beforeBody',
-            'beforeLabel',
-            'label',
-            'labelColor',
-            'labelTextColor',
-            'afterLabel',
-            'afterBody',
-            'beforeFooter',
-            'footer',
-            'afterFooter',
-          ];
-          for (let i = 0; i < callbacklist.length; i++) {
-            if (this.options.plugins?.tooltip?.callbacks?.[callbacklist[i]] != undefined) {
-              if (this.options.plugins.tooltip.callbacks[callbacklist[i]].search('function') != -1) {
-                eval(
-                  'this.options.plugins.tooltip.callbacks.' +
-                    callbacklist[i] +
-                    ' = ' +
-                    this.options.plugins.tooltip.callbacks[callbacklist[i]]
-                );
-              }
-            }
-          }
-        }
-      }
-
-      if (this.card.model == 'custom' || this.card.model == undefined) {
-        // Custom Data
-        this.title = this.card.title;
-        this.datacollection = {
-          datasets: this.card.series,
-        };
-        this.options = this.options;
-      } else {
-        // Use Model
-        this.loading = true;
-        Nova.request()
-          .get('/nova-vendor/coroowicaksono/check-data/endpoint', {
-            params: {
-              model: this.card.model,
-              series: this.card.series,
-              options: this.card.options,
-              join: this.card.join,
-              col_xaxis: this.card.col_xaxis,
-              expires: 0,
-            },
-          })
-          .then(({ data }) => {
-            this.datacollection = {
-              labels: data.dataset.xAxis,
-              datasets: data.dataset.yAxis,
-            };
-            this.loading = false;
-          })
-          .catch(({ response }) => {
-            this.errors = response.data.errors;
-            this.loading = false;
-          });
+      if (opts.tooltips) {
+        this.chartOptions.plugins.tooltip = opts.tooltips;
       }
     },
   },

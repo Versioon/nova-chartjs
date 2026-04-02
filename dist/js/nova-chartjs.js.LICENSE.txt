@@ -13,8 +13,25 @@
  */
 
 /*!
+ * The buffer module from node.js, for the browser.
+ *
+ * @author   Feross Aboukhadijeh <http://feross.org>
+ * @license  MIT
+ */
+
+/*!
+ * vuex v4.1.0
+ * (c) 2022 Evan You
+ * @license MIT
+ */
+
+/*!
 * chartjs-plugin-annotation v2.2.1
 * https://www.chartjs.org/chartjs-plugin-annotation/index
  * (c) 2023 chartjs-plugin-annotation Contributors
  * Released under the MIT License
  */
+
+/*! Axios v1.14.0 Copyright (c) 2026 Matt Zabriskie and contributors */
+
+/*! ieee754. BSD-3-Clause License. Feross Aboukhadijeh <https://feross.org/opensource> */

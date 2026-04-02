@@ -1,11 +1,11 @@
 /**
  * Mixin for handling chart data export to Excel.
- * 
+ *
  * This mixin provides the downloadXLSX method that:
  * - Sends chart data to the export endpoint
  * - Triggers automatic file download
  * - Handles loading states and errors
- * 
+ *
  * Requirements:
  * - Component must have `card` prop with series, title, and options
  * - Component must have `datacollection` data property with labels
@@ -15,12 +15,12 @@ export default {
   methods: {
     /**
      * Export chart data to Excel file.
-     * 
+     *
      * Sends a POST request to the export endpoint with:
      * - series: Chart series data
      * - labels: X-axis labels
      * - title: Chart title for filename
-     * 
+     *
      * The response is a blob that gets automatically downloaded
      * with filename format: {title}_{timestamp}.xlsx
      */
@@ -36,7 +36,7 @@ export default {
       };
 
       Nova.request()
-        .post('/nova-vendor/coroowicaksono/check-data/export', params, {
+        .post('/nova-vendor/versioon/nova-chartjs/check-data/export', params, {
           responseType: 'blob',
         })
         .then((response) => {
@@ -69,4 +69,3 @@ export default {
     },
   },
 };
-

@@ -1,11 +1,11 @@
 <?php
 
-namespace Coroowicaksono\ChartJsIntegration\Api;
+namespace Versioon\NovaChartJS\Api;
 
 use Illuminate\Routing\Controller;
-use Laravel\Nova\Http\Requests\NovaRequest;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Laravel\Nova\Http\Requests\NovaRequest;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ExportController extends Controller
@@ -13,7 +13,6 @@ class ExportController extends Controller
     /**
      * Export chart data to Excel file.
      *
-     * @param NovaRequest $request
      * @return StreamedResponse
      */
     public function export(NovaRequest $request)
@@ -24,7 +23,7 @@ class ExportController extends Controller
         $sanitizedTitle = str($title)->limit(20, '')->replaceMatches('/[^A-Za-z0-9\s]/', '')->replaceMatches('/\s+/', '_')->value();
 
         // Create new Spreadsheet
-        $spreadsheet = new Spreadsheet();
+        $spreadsheet = new Spreadsheet;
         $sheet = $spreadsheet->getActiveSheet();
 
         // Set title

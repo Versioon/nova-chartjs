@@ -1,15 +1,10 @@
-const mix = require('laravel-mix')
+const mix = require('laravel-mix');
+
+require('./nova.mix');
 
 mix
-    .setPublicPath('dist')
-    .js('resources/js/chart-js-integration.js', 'js')
-    .vue({ version: 3 })
-    .webpackConfig({
-        externals: {
-            vue: 'Vue',
-            chartjs: 'Chart',
-        },
-        output: {
-            uniqueName: 'coroowicaksono/chart-js-integration',
-        },
-    })
+  .setPublicPath('dist')
+  .js('resources/js/nova-chartjs.js', 'js')
+  .css('resources/css/nova-chartjs.css', 'css')
+  .vue({ version: 3 })
+  .nova('versioon/nova-chart-js');

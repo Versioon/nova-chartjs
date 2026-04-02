@@ -1,3 +1,4 @@
 {
-    "/js/chart-js-integration.js": "/js/chart-js-integration.js"
+    "/js/nova-chartjs.js": "/js/nova-chartjs.js",
+    "/css/nova-chartjs.css": "/css/nova-chartjs.css"
 }

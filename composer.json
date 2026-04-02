@@ -1,5 +1,5 @@
 {
-  "name": "coroowicaksono/chart-js-integration",
+  "name": "versioon/nova-chart-js",
   "description": "A Simple Dashboard Chart in Laravel Nova using Chart JS. Starting create your own dashboard with Chart JS Integration can save your time and help you maintain consistency across standard elements such as Bar, Stacked, Line, Area, Doughnut and Pie Chart.",
   "keywords": [
     "laravel",
@@ -8,12 +8,11 @@
     "chart js"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/coroo",
+  "homepage": "https://github.com/versioon",
   "authors": [
     {
-      "name": "Kuncoro Wicaksono",
-      "email": "coroo.wicaksono@gmail.com",
-      "role": "Software Engineer"
+      "name": "Tarvo / Versioon",
+      "email": "tarvo@versioon.ee"
     }
   ],
   "require": {
@@ -23,14 +22,14 @@
   },
   "autoload": {
     "psr-4": {
-      "Coroowicaksono\\ChartJsIntegration\\": "src/",
-      "Coroowicaksono\\ChartJsIntegration\\Api\\": "src/api"
+      "Versioon\\NovaChartJS\\": "src/",
+      "Versioon\\NovaChartJS\\Api\\": "src/api"
     }
   },
   "extra": {
     "laravel": {
       "providers": [
-        "Coroowicaksono\\ChartJsIntegration\\CardServiceProvider"
+        "Versioon\\NovaChartJS\\CardServiceProvider"
       ]
     }
   },
@@ -44,5 +43,8 @@
       "type": "composer",
       "url": "https://nova.laravel.com"
     }
-  ]
+  ],
+  "require-dev": {
+    "laravel/pint": "^1.29"
+  }
 }
