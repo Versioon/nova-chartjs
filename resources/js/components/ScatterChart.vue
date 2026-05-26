@@ -2,6 +2,7 @@
   <loading-card :loading="loading" class="min-h-40 px-6 py-4">
     <div class="h-6 mb-4 flex items-center pb-0">
       <h4 class="mr-3 leading-tight text-sm font-bold">{{ card.title || 'Chart JS Integration' }}</h4>
+      <chart-tooltip :text="card.tooltip" />
       <div class="flex relative ml-auto flex-shrink-0">
         <SelectControl
           v-if="card.ranges && card.ranges.length > 0"
@@ -28,11 +29,13 @@ import { MetricBehavior } from 'laravel-nova';
 import LineChart from '../scatter-chart.vue';
 import IconRefresh from './Icons/IconRefresh';
 import IconExternalLink from './Icons/IconExternalLink';
+import ChartTooltip from './ChartTooltip';
 
 export default {
   components: {
     IconExternalLink,
     IconRefresh,
+    ChartTooltip,
     LineChart,
   },
 

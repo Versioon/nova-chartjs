@@ -94,6 +94,11 @@ abstract class BaseChartJsCard extends RangedMetric
         return $this->withMeta(['exportable' => true]);
     }
 
+    public function tooltip(string $text): static
+    {
+        return $this->withMeta(['tooltip' => $text]);
+    }
+
     public function getExportFilename(): string
     {
         $title = $this->meta['title'] ?? 'chart-export';
@@ -106,6 +111,7 @@ abstract class BaseChartJsCard extends RangedMetric
     {
         return array_merge([
             'title' => $this->meta['title'] ?? '',
+            'tooltip' => $this->meta['tooltip'] ?? null,
             'options' => $this->meta['options'] ?? (object) [],
             'exportable' => $this->meta['exportable'] ?? false,
             'height' => $this->meta['height'] ?? null,
