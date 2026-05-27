@@ -1,2 +1,8 @@
-@tailwind components;
-@tailwind utilities;
+.max-w-80 {
+    max-width: 20rem;
+}
+
+.size-4\! {
+    width: 16px !important;
+    height: 16px !important;
+}

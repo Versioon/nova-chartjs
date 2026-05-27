@@ -1,9 +1,9 @@
 <template>
     <button
         v-if="text"
-        v-tooltip="{ content: text, html: true, popperClass: 'max-w-80' }"
+        v-tooltip="{ content: text, html: true, popperClass: 'nova-chartjs-tooltip-popper' }"
         type="button"
-        class="group inline-flex items-center cursor-help focus:outline-none opacity-30 hover:opacity-50"
+        class="nova-chartjs-tooltip"
         :aria-label="text"
     >
         <svg
@@ -12,7 +12,7 @@
             height="16"
             fill="none"
             viewBox="0 0 16 16"
-            class="text-slate-800 dark:text-white !size-4"
+            class="nova-chartjs-tooltip__icon"
         >
             <path
                 fill="currentColor"
@@ -33,3 +33,37 @@ export default {
     },
 };
 </script>
+
+<style>
+.nova-chartjs-tooltip {
+    display: inline-flex;
+    align-items: center;
+    cursor: help;
+    opacity: 0.3;
+    background: transparent;
+    border: 0;
+    padding: 0;
+}
+
+.nova-chartjs-tooltip:hover {
+    opacity: 0.5;
+}
+
+.nova-chartjs-tooltip:focus {
+    outline: none;
+}
+
+.nova-chartjs-tooltip__icon {
+    width: 1rem;
+    height: 1rem;
+    color: #1f2937;
+}
+
+.dark .nova-chartjs-tooltip__icon {
+    color: #ffffff;
+}
+
+.nova-chartjs-tooltip-popper {
+    max-width: 20rem;
+}
+</style>
