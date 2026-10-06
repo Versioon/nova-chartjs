@@ -13,6 +13,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/endpoint', \Versioon\NovaChartJS\Api\TotalRecordsController::class . '@handle');
-Route::get('/circle-endpoint', \Versioon\NovaChartJS\Api\TotalCircleController::class . '@handle');
-Route::post('/export', \Versioon\NovaChartJS\Api\ExportController::class . '@export');
+Route::post('/export',\Versioon\NovaChartJS\Api\ExportController::class . '@export');
